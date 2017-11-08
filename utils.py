@@ -1,9 +1,9 @@
 from scipy.io import loadmat
 from datetime import datetime
 import os
-from collections import Counter
 import numpy as np
 import random
+from parameters import *
 
 
 def calc_age(taken, dob):
@@ -88,6 +88,26 @@ def data_augmentation(batch):
     return batch
 
 
+def reformat(labels):
+    labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
+    # labels = np.array([[float(i == label) for i in range(label_count)] for label in labels])
+    return labels
+
+
+# def reformat(dataset, labels):
+#     dataset = dataset.reshape(-1, image_size * image_size * img_channels).astype(np.float32)
+#     labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
+#     return dataset, labels
+
+
+def randomize(dataset, gender, age):
+    permutation = np.random.permutation(age.shape[0])
+    shuffle_dataset = dataset[permutation, :, :, :]
+    shuffle_labels_gender = gender[permutation]
+    shuffle_labels_age = age[permutation]
+    return shuffle_dataset, shuffle_labels_gender, shuffle_labels_age
+
+
 def main():
     # full_path, dob, gender, photo_taken, face_score, second_face_score, age = get_meta("data/wiki_crop/wiki.mat", "wiki")
     print("----------------Load data----------------")
@@ -98,16 +118,16 @@ def main():
     print(labels_gender.shape)
     print("Max age: ", max(labels_age))
     unique, counts = np.unique(labels_age, return_counts=True)
-    # print(unique)
+    print(unique)
     labels = (np.arange(101) == labels_age[:, None]).astype(np.float32)
-    # print(labels
+    # print(labels)
     print(labels.shape)
     print("----------------get Meta------------------")
-    full_path, dob, gender, photo_taken, face_score, second_face_score, age = get_meta("data/wiki_crop/wiki.mat","wiki")
+    full_path, dob, gender, photo_taken, face_score, second_face_score, age = get_meta("data/wiki_crop/wiki.mat",
+                                                                                       "wiki")
     print(full_path[0])
     print(gender[0], age[0])
     print(photo_taken[0])
-
 
 
 if __name__ == '__main__':
