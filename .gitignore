@@ -4,3 +4,6 @@ model-gender/*
 .idea/
 __pycache__
 /model-gender/
+/model-gender1/
+/logs/
+/logs-gender/
