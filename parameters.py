@@ -8,7 +8,8 @@ init_learning_rate = 0.1
 epsilon = 1e-4
 
 dropout_rate = 0.2
-class_num = 2
+class_num_gender = 2
+class_num_age = 101
 image_size = 32
 img_channels = 3
 

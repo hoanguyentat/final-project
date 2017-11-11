@@ -60,7 +60,7 @@ def Concatenation(layers):
 
 
 def Linear(x):
-    return tf.layers.dense(inputs=x, units=class_num, name='linear')
+    return tf.layers.dense(inputs=x, units=class_num_gender, name='linear')
 
 
 def Evaluate(sess):
@@ -174,120 +174,123 @@ class DenseNet():
         return x
 
 
-train_image, labels_gender, labels_age, _, _, _ = load_data(data_path)
-# shuffle data
-# train_image, labels_gender, labels_age = randomize(train_image, labels_gender, labels_age)
-labels_gender = reformat(labels_gender)
-labels_age = reformat(labels_age)
+def main():
+    # get data from file
+    train_image, labels_gender, labels_age, _, _, _ = load_data(data_path)
+    labels_gender = reformat(labels_gender, class_num_gender)
+    labels_age = reformat(labels_age, class_num_age)
 
-# train_x, train_y, test_x, test_y = prepare_data()
-nbtrain = int(train_image.shape[0] * train_fraction)
-train_x = train_image[0:nbtrain, :, :, :]
-train_y = labels_gender[0:nbtrain]
-test_x = train_image[nbtrain:, :, :, :]
-test_y = labels_gender[nbtrain:]
-print(train_x.shape, train_y.shape)
+    # Divide data for train dataset and test dataset
+    nbtrain = int(train_image.shape[0] * train_fraction)
+    train_x = train_image[0:nbtrain, :, :, :]
+    train_y = labels_gender[0:nbtrain]
+    test_x = train_image[nbtrain:, :, :, :]
+    test_y = labels_gender[nbtrain:]
+    print(train_x.shape, train_y.shape)
 
-train_x, test_x = color_preprocessing(train_x, test_x)
+    train_x, test_x = color_preprocessing(train_x, test_x)
 
-print("Modeling....")
-x = tf.placeholder(tf.float32, shape=[None, image_size, image_size, img_channels])
-label = tf.placeholder(tf.float32, shape=[None, class_num])
-
-training_flag = tf.placeholder(tf.bool)
-
-learning_rate = tf.placeholder(tf.float32, name='learning_rate')
-
-logits = DenseNet(x=x, nb_blocks=nb_block, filters=growth_k, training=training_flag).model
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=label, logits=logits), name="cost")
-
-l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
-optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True, name="optimizer")
-train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
+    print("Modeling....")
+    # Variables
+    x = tf.placeholder(tf.float32, shape=[None, image_size, image_size, img_channels])
+    label = tf.placeholder(tf.float32, shape=[None, class_num_gender])
+    training_flag = tf.placeholder(tf.bool)
+    learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
 
-correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    logits = DenseNet(x=x, nb_blocks=nb_block, filters=growth_k, training=training_flag).model
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=label, logits=logits), name="cost")
 
-tf.add_to_collection('training_flag', training_flag)
-tf.add_to_collection('x', x)
-tf.add_to_collection('image_size', image_size)
-tf.add_to_collection('img_channels', img_channels)
-tf.add_to_collection('logits', logits)
-tf.add_to_collection('learning_rate', learning_rate)
-tf.add_to_collection('cost', cost)
-tf.add_to_collection('optimizer', optimizer)
-tf.add_to_collection('train', train)
-tf.add_to_collection('l2_loss', l2_loss)
-tf.add_to_collection('correct_prediction', correct_prediction)
-tf.add_to_collection('accuracy', accuracy)
+    l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
+    optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True, name="optimizer")
+    train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
 
 
-saver = tf.train.Saver(tf.global_variables())
+    correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+    tf.add_to_collection('training_flag', training_flag)
+    tf.add_to_collection('x', x)
+    tf.add_to_collection('image_size', image_size)
+    tf.add_to_collection('img_channels', img_channels)
+    tf.add_to_collection('logits', logits)
+    tf.add_to_collection('learning_rate', learning_rate)
+    tf.add_to_collection('cost', cost)
+    tf.add_to_collection('optimizer', optimizer)
+    tf.add_to_collection('train', train)
+    tf.add_to_collection('l2_loss', l2_loss)
+    tf.add_to_collection('correct_prediction', correct_prediction)
+    tf.add_to_collection('accuracy', accuracy)
 
-with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
-    ckpt = tf.train.get_checkpoint_state('./model-gender')
-    if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
-        saver.restore(sess, ckpt.model_checkpoint_path)
-    else:
-        sess.run(tf.global_variables_initializer())
+    saver = tf.train.Saver(tf.global_variables())
 
-    summary_writer = tf.summary.FileWriter('./logs-gender', sess.graph)
+    # Start train
+    print("Modeling done, starting training...")
+    with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+        ckpt = tf.train.get_checkpoint_state('./model-gender')
+        if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
+            saver.restore(sess, ckpt.model_checkpoint_path)
+        else:
+            sess.run(tf.global_variables_initializer())
 
-    epoch_learning_rate = init_learning_rate
-    for epoch in range(1, total_epochs + 1):
-        if epoch == (total_epochs * 0.25) or epoch == (total_epochs * 0.5) or epoch == (total_epochs * 0.75):
-            epoch_learning_rate = epoch_learning_rate / 10
+        summary_writer = tf.summary.FileWriter('./logs-gender', sess.graph)
 
-        pre_index = 0
-        train_acc = 0.0
-        train_loss = 0.0
+        epoch_learning_rate = init_learning_rate
+        for epoch in range(1, total_epochs + 1):
+            if epoch == (total_epochs * 0.25) or epoch == (total_epochs * 0.5) or epoch == (total_epochs * 0.75):
+                epoch_learning_rate = epoch_learning_rate / 10
 
-        iteration = int(train_y.shape[0] / batch_size)
-        for step in range(iteration):
-            if pre_index + batch_size < train_y.shape[0]:
-                batch_x = train_x[pre_index: pre_index + batch_size]
-                batch_y = train_y[pre_index: pre_index + batch_size]
-            else:
-                batch_x = train_x[pre_index:]
-                batch_y = train_y[pre_index:]
+            pre_index = 0
+            train_acc = 0.0
+            train_loss = 0.0
 
-            # randomize data
-            batch_x = data_augmentation(batch_x)
+            iteration = int(train_y.shape[0] / batch_size)
+            for step in range(iteration):
+                if pre_index + batch_size < train_y.shape[0]:
+                    batch_x = train_x[pre_index: pre_index + batch_size]
+                    batch_y = train_y[pre_index: pre_index + batch_size]
+                else:
+                    batch_x = train_x[pre_index:]
+                    batch_y = train_y[pre_index:]
 
-            train_feed_dict = {
-                x: batch_x,
-                label: batch_y,
-                learning_rate: epoch_learning_rate,
-                training_flag: True
-            }
+                # randomize data
+                batch_x = data_augmentation(batch_x)
 
-            _, batch_loss = sess.run([train, cost], feed_dict=train_feed_dict)
-            batch_acc = accuracy.eval(feed_dict=train_feed_dict)
+                train_feed_dict = {
+                    x: batch_x,
+                    label: batch_y,
+                    learning_rate: epoch_learning_rate,
+                    training_flag: True
+                }
 
-            train_loss += batch_loss
-            train_acc += batch_acc
-            pre_index += batch_size
+                _, batch_loss = sess.run([train, cost], feed_dict=train_feed_dict)
+                batch_acc = accuracy.eval(feed_dict=train_feed_dict)
 
-            # Buoc step phai so sanh voi iteration - 1
-            if step == iteration - 1:
-                train_loss /= iteration  # average loss
-                train_acc /= iteration  # average accuracy
+                train_loss += batch_loss
+                train_acc += batch_acc
+                pre_index += batch_size
 
-                train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
-                                                  tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
-                tf.add_to_collection('train_summary', train_summary)
-                test_acc, test_loss, test_summary = Evaluate(sess)
+                # Buoc step phai so sanh voi iteration - 1
+                if step == iteration - 1:
+                    train_loss /= iteration  # average loss
+                    train_acc /= iteration  # average accuracy
 
-                summary_writer.add_summary(summary=train_summary, global_step=epoch)
-                summary_writer.add_summary(summary=test_summary, global_step=epoch)
-                # summary_writer.flush()
+                    train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
+                                                      tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
+                    tf.add_to_collection('train_summary', train_summary)
+                    test_acc, test_loss, test_summary = Evaluate(sess)
 
-                line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, test_acc: %.4f \n" % (
-                    epoch, total_epochs, train_loss, train_acc, test_loss, test_acc)
-                print(line)
+                    summary_writer.add_summary(summary=train_summary, global_step=epoch)
+                    summary_writer.add_summary(summary=test_summary, global_step=epoch)
+                    # summary_writer.flush()
 
-                with open('logs-gender.txt', 'a') as f:
-                    f.write(line)
-        saver.save(sess=sess, save_path='./model-gender/dense.ckpt')
+                    line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, test_acc: %.4f \n" % (
+                        epoch, total_epochs, train_loss, train_acc, test_loss, test_acc)
+                    print(line)
+
+                    with open('logs-gender.txt', 'a') as f:
+                        f.write(line)
+            saver.save(sess=sess, save_path='./model-gender/dense.ckpt')
+
+if __name__ == '__main__':
+    main()

@@ -88,7 +88,7 @@ def data_augmentation(batch):
     return batch
 
 
-def reformat(labels):
+def reformat(labels, class_num):
     labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
     # labels = np.array([[float(i == label) for i in range(label_count)] for label in labels])
     return labels
