@@ -2,7 +2,7 @@ data/*
 logs/*
 model-gender/*
 .idea/
-__pycache__
+/__pycache__/
 /model-gender/
 /model-gender1/
 /logs/

@@ -58,5 +58,5 @@ def evulate():
     print(valid)
 if __name__ == '__main__':
     # restore_graph("./model-gender")
-    # predict('data/test/img20131/', './model-gender')
-    evulate()
+    predict('data/test/hola/', './model-gender')
+    # evulate()
