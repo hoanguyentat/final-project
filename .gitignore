@@ -1,5 +1,7 @@
 data/*
 logs/*
+logs-age/*
+model-age/*
 model-gender/*
 .idea/
 /__pycache__/
