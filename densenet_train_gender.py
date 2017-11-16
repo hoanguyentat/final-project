@@ -103,7 +103,7 @@ def main():
 
         epoch_learning_rate = init_learning_rate
         for epoch in range(1, total_epochs + 1):
-            if epoch == (total_epochs * 0.25) or epoch == (total_epochs * 0.5) or epoch == (total_epochs * 0.75):
+            if epoch == (total_epochs * 0.2) or epoch == (total_epochs * 0.4) or epoch == (total_epochs * 0.6) or epoch == (total_epochs * 0.8):
                 epoch_learning_rate = epoch_learning_rate / 10
 
             pre_index = 0
