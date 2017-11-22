@@ -143,8 +143,8 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 summary_writer.add_summary(summary=test_summary, global_step=epoch)
                 # summary_writer.flush()
 
-                line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, test_acc: %.4f \n" % (
-                    epoch, total_epochs, train_loss, train_acc, test_loss, test_acc)
+                line = "epoch: %d/%d, train_loss: %.4f, test_loss: %.4f \n" % (
+                    epoch, total_epochs, train_loss, test_loss)
                 print(line)
 
                 with open('logs-age.txt', 'a') as f:

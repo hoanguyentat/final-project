@@ -9,3 +9,4 @@ model-gender/*
 /model-gender1/
 /logs/
 /logs-gender/
+*.tmp
