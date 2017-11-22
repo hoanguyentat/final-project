@@ -24,4 +24,4 @@ train_fraction = 0.8
 test_fraction = 0.2
 
 test_batch_size = 100
-total_epochs = 100
+total_epochs = 400
