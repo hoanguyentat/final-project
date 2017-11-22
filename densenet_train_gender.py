@@ -54,6 +54,7 @@ train_x, test_x = color_preprocessing(train_x, test_x)
 print("Modeling....")
 # Variables
 x = tf.placeholder(tf.float32, shape=[None, image_size, image_size, img_channels])
+print("x: ", x.shape)
 label = tf.placeholder(tf.float32, shape=[None, class_num_gender])
 training_flag = tf.placeholder(tf.bool)
 learning_rate = tf.placeholder(tf.float32, name='learning_rate')

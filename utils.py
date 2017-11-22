@@ -84,7 +84,7 @@ def color_preprocessing(x_train, x_test):
 
 def data_augmentation(batch):
     batch = _random_flip_leftright(batch)
-    batch = _random_crop(batch, [32, 32], 4)
+    batch = _random_crop(batch, [image_size, image_size], 4)
     return batch
 
 
