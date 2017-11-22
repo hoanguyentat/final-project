@@ -42,7 +42,7 @@ def mk_dir(dir):
         pass
 
 
-def _random_crop(batch, crop_shape, padding=None):
+def random_crop(batch, crop_shape, padding=None):
     oshape = np.shape(batch[0])
 
     if padding:
@@ -61,7 +61,7 @@ def _random_crop(batch, crop_shape, padding=None):
     return new_batch
 
 
-def _random_flip_leftright(batch):
+def random_flip_leftright(batch):
     for i in range(len(batch)):
         if bool(random.getrandbits(1)):
             batch[i] = np.fliplr(batch[i])
@@ -71,6 +71,7 @@ def _random_flip_leftright(batch):
 def color_preprocessing(x_train, x_test):
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
+    # Tinh mean tren cung mot chieu khong gian
     x_train[:, :, :, 0] = (x_train[:, :, :, 0] - np.mean(x_train[:, :, :, 0])) / np.std(x_train[:, :, :, 0])
     x_train[:, :, :, 1] = (x_train[:, :, :, 1] - np.mean(x_train[:, :, :, 1])) / np.std(x_train[:, :, :, 1])
     x_train[:, :, :, 2] = (x_train[:, :, :, 2] - np.mean(x_train[:, :, :, 2])) / np.std(x_train[:, :, :, 2])
@@ -83,8 +84,8 @@ def color_preprocessing(x_train, x_test):
 
 
 def data_augmentation(batch):
-    batch = _random_flip_leftright(batch)
-    batch = _random_crop(batch, [image_size, image_size], 4)
+    batch = random_flip_leftright(batch)
+    batch = random_crop(batch, [image_size, image_size], 4)
     return batch
 
 
