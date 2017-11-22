@@ -7,3 +7,4 @@ __pycache__
 /model-gender1/
 /logs/
 /logs-gender/
+*.tmp
