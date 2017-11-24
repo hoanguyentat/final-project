@@ -1,10 +1,11 @@
 data/*
 logs/*
 logs-age/*
+logs-gender-new/*
 model-age/*
 model-gender/*
 .idea/
-/__pycache__/
+__pycache__/*
 /model-gender/
 /model-gender1/
 /logs/
