@@ -115,7 +115,7 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 batch_x = train_x[pre_index:]
                 batch_y = train_y[pre_index:]
 
-            # randomize data
+            # randomize, flip,... data
             batch_x = data_augmentation(batch_x)
 
             train_feed_dict = {
@@ -132,7 +132,7 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             train_acc += batch_acc
             pre_index += batch_size
 
-            # Buoc step phai so sanh voi iteration - 1
+            # Log data each epoch
             if step == iteration - 1:
                 train_loss /= iteration  # average loss
                 train_acc /= iteration  # average accuracy
