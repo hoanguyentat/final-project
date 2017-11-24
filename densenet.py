@@ -105,7 +105,7 @@ class DenseNet():
             return x
 
     def Dense_net(self, input_x):
-        # x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
+        x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
         x = tf_max_pooling(input_x, pool_size=[3,3], stride=2)
 
         layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
@@ -113,7 +113,8 @@ class DenseNet():
         for i in range(self.nb_blocks) :
             # 6 -> 12 -> 48
             x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(i))
-            x = self.transition_layer(x, scope='trans_'+str(i))
+            if i != self.nb_blocks - 1:
+                x = self.transition_layer(x, scope='trans_'+str(i))
 
         # x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
         # x = self.transition_layer(x, scope='trans_1')
