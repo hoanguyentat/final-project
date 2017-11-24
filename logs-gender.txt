@@ -1,5 +1,0 @@
-epoch: 1/400, train_loss: 0.5760, train_acc: 0.7484, test_loss: 0.5615, test_acc: 0.7520 
-epoch: 2/400, train_loss: 0.5672, train_acc: 0.7491, test_loss: 0.5636, test_acc: 0.7520 
-epoch: 3/400, train_loss: 0.5665, train_acc: 0.7492, test_loss: 0.5652, test_acc: 0.7520 
-epoch: 4/400, train_loss: 0.5607, train_acc: 0.7492, test_loss: 0.7333, test_acc: 0.2599 
-epoch: 5/400, train_loss: 0.5395, train_acc: 0.7528, test_loss: 0.7098, test_acc: 0.4221 
