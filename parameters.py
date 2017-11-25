@@ -1,6 +1,6 @@
-# Hyperparameter
+#Hyperparameter
 growth_k = 48
-data_path = 'data/wiki_crop/wiki_db_96.mat'
+data_path = 'data/wiki_crop/wiki_db_32.mat'
 # Number of (dense block + Transition Layer)
 nb_block = 3
 init_learning_rate = 0.1
@@ -10,7 +10,7 @@ epsilon = 1e-4
 dropout_rate = 0.2
 class_num_gender = 2
 class_num_age = 101
-image_size = 96
+image_size = 32
 img_channels = 3
 
 # Momentum Optimizer will use
