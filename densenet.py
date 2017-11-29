@@ -6,7 +6,7 @@ from utils import *
 from parameters import *
 
 
-depth = 100
+# depth = 100
 
 def conv_layer(input, filter, kernel, stride=1, layer_name="conv"):
     with tf.name_scope(layer_name):
