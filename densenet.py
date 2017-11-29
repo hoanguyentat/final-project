@@ -10,8 +10,7 @@ depth = 40
 
 def conv_layer(input, filter, kernel, stride=1, layer_name="conv"):
     with tf.name_scope(layer_name):
-        network = tf.layers.conv2d(inputs=input, use_bias=False, filters=filter, kernel_size=kernel, strides=stride,
-                                   padding='SAME')
+        network = tf.layers.conv2d(inputs=input, use_bias=False, filters=filter, kernel_size=kernel, strides=stride, padding='SAME')
         return network
 
 
@@ -21,18 +20,21 @@ def global_average_pooling(x, stride=1):
     pool_size = [width, height]
     return tf.layers.average_pooling2d(inputs=x, pool_size=pool_size, strides=stride)
 
-def batch_normalization(x, training, scope):
-    with arg_scope([batch_norm],
-                   scope=scope,
-                   updates_collections=None,
-                   decay=0.9,
-                   center=True,
-                   scale=True,
-                   zero_debias_moving_mean=True):
-        return tf.cond(training,
-                       lambda: batch_norm(inputs=x, is_training=training, reuse=None),
-                       lambda: batch_norm(inputs=x, is_training=training, reuse=True))
+# def batch_normalization(x, training, scope):
+#     with arg_scope([batch_norm],
+#                    scope=scope,
+#                    updates_collections=None,
+#                    decay=0.9,  #model experiences reasonably good training performance but poor validation and/or test performance
+#                    center=True,
+#                    scale=True,
+#                    zero_debias_moving_mean=True):
+#         return tf.cond(training,
+#                        lambda: batch_norm(inputs=x, is_training=training, reuse=None),
+#                        lambda: batch_norm(inputs=x, is_training=training, reuse=True))
 
+def batch_normalization(_input, is_training, scope):
+    output = batch_norm(_input, scale=True, is_training=is_training, scope=scope, updates_collections=None)
+    return output
 
 def tf_dropout(x, rate, training):
     return tf.layers.dropout(inputs=x, rate=rate, training=training)
@@ -108,24 +110,24 @@ class DenseNet():
         x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
         x = tf_max_pooling(input_x, pool_size=[3,3], stride=2)
 
-        layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
+        # layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
 
-        for i in range(self.nb_blocks) :
-            # 6 -> 12 -> 48
-            x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(i))
-            if i != self.nb_blocks - 1:
-                x = self.transition_layer(x, scope='trans_'+str(i))
+        # for i in range(self.nb_blocks) :
+        #     # 6 -> 12 -> 48
+        #     x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(i))
+        #     if i != self.nb_blocks - 1:
+        #         x = self.transition_layer(x, scope='trans_'+str(i))
 
-        # x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
-        # x = self.transition_layer(x, scope='trans_1')
+        x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
+        x = self.transition_layer(x, scope='trans_1')
 
-        # x = self.dense_block(input_x=x, nb_layers=12, layer_name='dense_2')
-        # x = self.transition_layer(x, scope='trans_2')
+        x = self.dense_block(input_x=x, nb_layers=12, layer_name='dense_2')
+        x = self.transition_layer(x, scope='trans_2')
 
-        # x = self.dense_block(input_x=x, nb_layers=48, layer_name='dense_3')
-        # x = self.transition_layer(x, scope='trans_3')
+        x = self.dense_block(input_x=x, nb_layers=48, layer_name='dense_3')
+        x = self.transition_layer(x, scope='trans_3')
 
-        # x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
+        x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
 
 
         x = batch_normalization(x, training=self.training, scope='linear_batch')
