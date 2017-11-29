@@ -57,7 +57,7 @@ training_flag = tf.placeholder(tf.bool)
 learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
 
-logits = DenseNet(x=x, nb_blocks=nb_block, filters=growth_k, training=training_flag).model
+logits = DenseNet(x=x, nb_blocks=nb_blocks, filters=growth_k, training=training_flag).model
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=label, logits=logits), name="cost")
 
 l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
@@ -82,7 +82,7 @@ tf.add_to_collection('correct_prediction', correct_prediction)
 tf.add_to_collection('accuracy', accuracy)
 
 saver = tf.train.Saver(tf.global_variables())
-
+parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d" % (growth_k, init_learning_rate, weight_decay, nb_blocks, image_size)
 # Start train
 print("Modeling done, starting training...")
 with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
