@@ -1,5 +1,5 @@
 #Hyperparameter
-growth_k = 32
+growth_k = 12
 data_path = 'data/wiki_crop/wiki_db_96.mat'
 # Number of (dense block + Transition Layer)
 nb_blocks = 3
