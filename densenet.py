@@ -32,8 +32,8 @@ def global_average_pooling(x, stride=1):
 #                        lambda: batch_norm(inputs=x, is_training=training, reuse=None),
 #                        lambda: batch_norm(inputs=x, is_training=training, reuse=True))
 
-def batch_normalization(_input, is_training, scope):
-    output = batch_norm(_input, scale=True, is_training=is_training, scope=scope, updates_collections=None)
+def batch_normalization(x, training, scope):
+    output = batch_norm(x, scale=True, is_training=training, scope=scope, updates_collections=None)
     return output
 
 def tf_dropout(x, rate, training):
