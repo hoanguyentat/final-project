@@ -7,8 +7,10 @@ model-gender/*
 .idea/
 __pycache__/*
 /model-gender/
+model-gender-new/*
 /model-gender1/
 /logs/
 /logs-gender/
 *.tmp
+*.pyc
 *.txt

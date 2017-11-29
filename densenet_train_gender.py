@@ -97,7 +97,7 @@ tf.add_to_collection('accuracy', accuracy)
 saver = tf.train.Saver(tf.global_variables())
 
 # Start train
-parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d" % (growth_k, init_learning_rate, batch_size, weight_decay, nb_blocks, image_size)
+parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d \n" % (growth_k, init_learning_rate, batch_size, weight_decay, nb_blocks, image_size)
 with open('logs-gender.txt', 'a') as f:
     f.write(parameter_log)
 print("Modeling done, starting training...")
