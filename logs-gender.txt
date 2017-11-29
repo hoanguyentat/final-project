@@ -1,1 +1,0 @@
-growth_k = 12, init_learning_rate = 0.100000, batch_size = 100, weight_decay = 0.000100, number_of_block = 3, image_size = 64
