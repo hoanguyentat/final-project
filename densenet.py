@@ -99,7 +99,7 @@ class DenseNet():
 
             layers_concat.append(x)
 
-            for i in range(nb_layers - 1):
+            for i in range(nb_layers):
                 x = concatenation(layers_concat)
                 x = self.bottleneck_layer(x, scope=layer_name + '_bottleN_' + str(i + 1))
                 layers_concat.append(x)
@@ -110,27 +110,28 @@ class DenseNet():
         x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
         x = tf_max_pooling(input_x, pool_size=[3,3], stride=2)
 
-        # layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
+        layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
 
-        # for i in range(self.nb_blocks) :
-        #     # 6 -> 12 -> 48
-        #     x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(i))
-        #     if i != self.nb_blocks - 1:
-        #         x = self.transition_layer(x, scope='trans_'+str(i))
+        for i in range(self.nb_blocks) :
+            # 6 -> 12 -> 48
+            x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(i))
+            if i != self.nb_blocks - 1:
+                x = self.transition_layer(x, scope='trans_'+str(i))
 
-        x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
-        x = self.transition_layer(x, scope='trans_1')
+        x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(self.nb_blocks))
+        # x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
+        # x = self.transition_layer(x, scope='trans_1')
 
-        x = self.dense_block(input_x=x, nb_layers=12, layer_name='dense_2')
-        x = self.transition_layer(x, scope='trans_2')
+        # x = self.dense_block(input_x=x, nb_layers=12, layer_name='dense_2')
+        # x = self.transition_layer(x, scope='trans_2')
 
-        x = self.dense_block(input_x=x, nb_layers=48, layer_name='dense_3')
-        x = self.transition_layer(x, scope='trans_3')
+        # x = self.dense_block(input_x=x, nb_layers=48, layer_name='dense_3')
+        # x = self.transition_layer(x, scope='trans_3')
 
-        x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
+        # x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
 
 
-        x = batch_normalization(x, training=self.training, scope='linear_batch')
+        # x = batch_normalization(x, training=self.training, scope='linear_batch')
         x = tf_relu(x)
         x = global_average_pooling(x)
         x = flatten(x)
