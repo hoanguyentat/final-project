@@ -13,3 +13,4 @@ model-gender-new/*
 /logs-gender/
 *.tmp
 *.pyc
+*.txt
