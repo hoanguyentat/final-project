@@ -118,7 +118,7 @@ class DenseNet():
             if i != self.nb_blocks - 1:
                 x = self.transition_layer(x, scope='trans_'+str(i))
 
-        x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_'+str(self.nb_blocks))
+        x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_finally')
         # x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
         # x = self.transition_layer(x, scope='trans_1')
 
@@ -131,7 +131,7 @@ class DenseNet():
         # x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
 
 
-        # x = batch_normalization(x, training=self.training, scope='linear_batch')
+        x = batch_normalization(x, training=self.training, scope='linear_batch')
         x = tf_relu(x)
         x = global_average_pooling(x)
         x = flatten(x)
