@@ -7,6 +7,7 @@ from utils import get_meta
 from random import shuffle
 import glob
 import tensorflow as tf
+import sys
 
 
 def _int64_feature(value):
