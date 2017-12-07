@@ -82,7 +82,7 @@ def main():
 	create_tfrecord(tfrecord_train, valid_images,labels_valid_age, labels_valid_gender)
 
 def create_tfrecord(fn, data, labels_age, labels_gender):
-	writer = tf.python_io.TFRecordWrite(fn)
+	writer = tf.python_io.TFRecordWriter(fn)
 	for i in range(len(data)):
 		if not i % 1000:
 			print("Converting {}/{}".format(i, len(data)))
