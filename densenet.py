@@ -118,7 +118,7 @@ class DenseNet():
             if i != self.nb_blocks - 1:
                 x = self.transition_layer(x, scope='trans_'+str(i))
 
-        x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_finally')
+        # x = self.dense_block(input_x=x, nb_layers=layers_per_block, layer_name='dense_finally')
         # x = self.dense_block(input_x=x, nb_layers=6, layer_name='dense_1')
         # x = self.transition_layer(x, scope='trans_1')
 
