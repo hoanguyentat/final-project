@@ -10,6 +10,7 @@ __pycache__/*
 model-gender-new/*
 /model-gender1/
 /logs/
+tfrecords/
 /logs-gender/
 *.tmp
 *.pyc
