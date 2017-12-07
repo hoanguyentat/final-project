@@ -93,7 +93,7 @@ def create_tfrecord(fn, data, labels_age, labels_gender):
 			'label_gender': _int64_feature(labels_gender[i]),
 			'image': _bytes_feature(data[i].tostring())
 		}
-		record = tf.train.Example(feature=tf.train.Feature(feature=feature))
+		record = tf.train.Example(features=tf.train.Feature(feature=feature))
 		writer = writer.write(record.SerializeToString())
 	writer.close()
 	sys.out.flush()
