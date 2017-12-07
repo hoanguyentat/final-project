@@ -96,7 +96,7 @@ def create_tfrecord(fn, data, labels_age, labels_gender):
 		record = tf.train.Example(features=tf.train.Features(feature=feature))
 		writer.write(record.SerializeToString())
 	writer.close()
-	sys.out.flush()
+	sys.stdout.flush()
 
 if __name__ == '__main__':
 	main()
