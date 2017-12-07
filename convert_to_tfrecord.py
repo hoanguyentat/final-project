@@ -70,11 +70,11 @@ def main():
 	number_of_train = int(fr * len(out_imgs))
 	train_images = out_imgs[0:number_of_train]
 	labels_train_gender = out_genders[0: number_of_train]
-	labels_train_age = out_ages[0:out_ages]
+	labels_train_age = out_ages[0:number_of_train]
 
 	valid_images = out_imgs[number_of_train:]
 	labels_valid_gender = out_genders[number_of_train:]
-	labels_valid_age = out_ages[out_ages:]
+	labels_valid_age = out_ages[number_of_train:]
 
 	tfrecord_train = 'train_' + img_size + '.tfrecords'
 	tfrecord_valid = 'valid_' + img_size + '.tfrecords'
