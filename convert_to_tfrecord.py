@@ -80,7 +80,7 @@ def main():
 	tfrecord_train = 'train_' + str(img_size) + '.tfrecords'
 	tfrecord_valid = 'valid_' + str(img_size) + '.tfrecords'
 	create_tfrecord(tfrecord_train, train_images,labels_train_age, labels_train_gender)
-	create_tfrecord(tfrecord_train, valid_images,labels_valid_age, labels_valid_gender)
+	create_tfrecord(tfrecord_valid, valid_images,labels_valid_age, labels_valid_gender)
 
 def create_tfrecord(fn, data, labels_age, labels_gender):
 	writer = tf.python_io.TFRecordWriter(fn)
