@@ -76,8 +76,8 @@ def main():
 	labels_valid_gender = out_genders[number_of_train:]
 	labels_valid_age = out_ages[number_of_train:]
 
-	tfrecord_train = 'train_' + img_size + '.tfrecords'
-	tfrecord_valid = 'valid_' + img_size + '.tfrecords'
+	tfrecord_train = 'train_' + str(img_size) + '.tfrecords'
+	tfrecord_valid = 'valid_' + str(img_size) + '.tfrecords'
 	create_tfrecord(tfrecord_train, train_images,labels_train_age, labels_train_gender)
 	create_tfrecord(tfrecord_train, valid_images,labels_valid_age, labels_valid_gender)
 
