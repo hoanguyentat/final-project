@@ -100,7 +100,7 @@ class DenseNet():
             layers_concat.append(x)
 
             for i in range(nb_layers):
-                x = concatenation(layers_concat)
+                x = concatenation(layers_concat)  # Nối các layer lại với nhau
                 x = self.bottleneck_layer(x, scope=layer_name + '_bottleN_' + str(i + 1))
                 layers_concat.append(x)
 
@@ -131,7 +131,7 @@ class DenseNet():
         # x = self.dense_block(input_x=x, nb_layers=32, layer_name='dense_final')
 
 
-        # x = batch_normalization(x, training=self.training, scope='linear_batch')
+        x = batch_normalization(x, training=self.training, scope='linear_batch')
         x = tf_relu(x)
         x = global_average_pooling(x)
         x = flatten(x)
