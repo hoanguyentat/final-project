@@ -113,7 +113,7 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 training_flag: True
             }
             _, train_loss = sess.run([train, cost], feed_dict=train_feed_dict)
-            train_accuracy = accuracy.eval(feed_dict=train_feed_dict)
+            train_acc = accuracy.eval(feed_dict=train_feed_dict)
             dur_time = time.time() - start_time
 
             train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
