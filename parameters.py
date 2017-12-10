@@ -1,6 +1,7 @@
 #Hyperparameter
 growth_k = 12
 data_path = 'data/wiki_crop/wiki_db_96.mat'
+tfrecord_fn = 'tfrecords/train_96.tfrecords'
 # Number of (dense block + Transition Layer)
 nb_blocks = 3
 init_learning_rate = 0.1

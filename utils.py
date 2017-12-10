@@ -89,26 +89,29 @@ def data_augmentation(batch):
 	batch = random_crop(batch, [image_size, image_size], 4)
 	return batch
 
-def read_and_decode_tfrecodes(fn):
-	fn_queue = tf.train.string_input_producer([fn], num_epochs=None)
+def read_and_decode_tfrecords(fn, num_epochs=None):
+	feature = {
+		'label_age': tf.FixedLenFeature([],tf.int64),
+		'label_gender': tf.FixedLenFeature([],tf.int64),
+		'image': tf.FixedLenFeature([],tf.string)
+	}
+	fn_queue = tf.train.string_input_producer([fn], num_epochs=num_epochs)
 	reader = tf.TFRecordReader()
 	_, serialized_example = reader.read(fn_queue)
-	feature = {
-			'label_age': tf.FixedLenFeature([],tf.int64),
-			'label_gender': tf.FixedLenFeature([],tf.int64),
-			'image': tf.FixedLenFeature([],tf.string)
-		}
-	features = tf.parse_single_example(serialized_example, features=feature)
-	print(features)
-	
-	labels_gender = tf.cast(features['label_gender'], tf.float32)
-	labels_age = tf.cast(features['label_age'], tf.float32)
-	images = features['image']
-	data = tf.decode_raw(images, tf.float32)
-	data = tf.reshape(data, [image_size, image_size, img_channels])
-	print(data)
 
-	return labels_gender, labels_age, data
+	features = tf.parse_single_example(serialized_example, features=feature)
+	
+	labels_gender = tf.cast(features['label_gender'], tf.int32)
+	labels_age = tf.cast(features['label_age'], tf.int32)
+
+	images = tf.decode_raw(features['image'], tf.uint8)
+	images = tf.reshape(images, [image_size, image_size, img_channels])
+	images = tf.cast(images, tf.float32)
+
+	print("batch_size: " + str(batch_size))
+	image, label_gender = tf.train.shuffle_batch([images, labels_gender], batch_size=batch_size, capacity=1000 + 3 * batch_size, num_threads=1, min_after_dequeue=1000)
+
+	return image, label_gender
 
 def reformat(labels, class_num):
 	labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
@@ -138,13 +141,23 @@ def main():
 	# unique, counts = np.unique(labels_age, return_counts=True)
 
 	# labels = (np.arange(101) == labels_age[:, None]).astype(np.float32)
+	with tf.Session() as sess:
+		images, labels_gender = read_and_decode_tfrecodes('tfrecords/valid_32.tfrecords')
+		print("len image: " + str(images.shape))
+		init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
+		sess.run(init_op)
 
-	labels_gender, labels_age, images = read_and_decode_tfrecodes('tfrecords/valid_32.tfrecords')
-	# print(labels_age)
-	# print(labels_gender)
-	# print(images)
-	sess = tf.Session()
-	data = sess.run([images])
-	print(data.shape)
+		coord = tf.train.Coordinator()
+		threads = tf.train.start_queue_runners(coord=coord)
+		
+		for i in range(5):
+			img, lbl = sess.run([images, labels_gender])
+			print(lbl)
+		# Stop the threads
+		coord.request_stop()
+
+		# Wait for threads to stop
+		coord.join(threads)
+		sess.close()
 if __name__ == '__main__':
 	main()
