@@ -1,5 +1,5 @@
 #Hyperparameter
-growth_k = 12
+growth_k = 48
 data_path = 'data/wiki_crop/wiki_db_96.mat'
 tfrecord_fn = 'tfrecords/train_96.tfrecords'
 # Number of (dense block + Transition Layer)
@@ -13,6 +13,8 @@ class_num_gender = 2
 class_num_age = 101
 image_size = 96
 img_channels = 3
+nb_of_train_images = 30510
+nb_of_test_images = 7628
 
 # Momentum Optimizer will use
 nesterov_momentum = 0.9
