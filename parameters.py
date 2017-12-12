@@ -1,5 +1,5 @@
 #Hyperparameter
-growth_k = 48
+growth_k = 24
 data_path = 'data/wiki_crop/wiki_db_96.mat'
 tfrecord_fn = 'tfrecords/train_96.tfrecords'
 # Number of (dense block + Transition Layer)
