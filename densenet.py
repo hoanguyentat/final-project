@@ -86,7 +86,6 @@ class DenseNet():
             x = conv_layer(x, filter=self.filters, kernel=[1, 1], layer_name=scope + '_conv1')
             x = tf_dropout(x, rate=dropout_rate, training=self.training)
             x = tf_average_pooling(x, pool_size=[2, 2], stride=2)
-
             return x
 
     def dense_block(self, input_x, nb_layers, layer_name):

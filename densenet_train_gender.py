@@ -109,14 +109,11 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
     else:
         sess.run(tf.global_variables_initializer())
 
-    #start input enqueue threads
-    # coord = tf.train.Coordinator()
-    # threads = tf.train.start_queue_runners(sess= sess, coord=coord)
+
     epoch_learning_rate = init_learning_rate
 
     summary_writer = tf.summary.FileWriter('./logs-gender-new', sess.graph)
-    # try:
-        # while not coord.should_stop():
+
     for epoch in range(1, total_epochs + 1):
         if epoch == (total_epochs * 0.2) or epoch == (total_epochs * 0.4) or epoch == (total_epochs * 0.6) or epoch == (total_epochs * 0.8):
             epoch_learning_rate = epoch_learning_rate / 10
@@ -173,13 +170,4 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 with open('logs-gender.txt', 'a') as f:
                     f.write(log_line)
         saver.save(sess=sess, save_path='./model-gender-new/dense.ckpt')
-    # except tf.errors.OutOfRangeError as e:
-        # with open('logs_out_of_range.txt', 'a') as f:
-            # f.write(e)
-    # finally:
-        # When done, ask the threads to stop.
-        # coord.request_stop()
 
-    # Wait for threads to finish.
-    # coord.join(threads)
-    # sess.close()

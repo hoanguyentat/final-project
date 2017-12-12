@@ -109,7 +109,7 @@ def read_and_decode_tfrecords(fn, num_epochs=None):
 	images = tf.cast(images, tf.float32)
 
 	print("batch_size: " + str(batch_size))
-	image, label_gender = tf.train.shuffle_batch([images, labels_gender], batch_size=batch_size, capacity=1000 + 3 * batch_size, num_threads=1, min_after_dequeue=1000)
+	image, label_gender = tf.train.shuffle_batch([images, labels_gender], batch_size=batch_size, capacity=1000 + 3 * batch_size, num_threads=2, min_after_dequeue=1000)
 
 	return image, label_gender
 
