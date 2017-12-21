@@ -77,7 +77,6 @@ l2_loss = tf.add_n(costs)
 optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True, name="optimizer")
 train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
 
-
 correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 

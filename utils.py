@@ -108,8 +108,11 @@ def read_and_decode_tfrecords(fn, num_epochs=None):
 	images = tf.reshape(images, [image_size, image_size, img_channels])
 	images = tf.cast(images, tf.float32)
 
+	images_crop = tf.random_crop(images, [image_size, image_size, img_channels])
+	images_flip = tf.image.random_flip_left_right(images_crop)
+	
 	print("batch_size: " + str(batch_size))
-	image, label_gender = tf.train.shuffle_batch([images, labels_gender], batch_size=batch_size, capacity=1000 + 3 * batch_size, num_threads=2, min_after_dequeue=1000)
+	image, label_gender = tf.train.shuffle_batch([images_flip, labels_gender], batch_size=batch_size, capacity=1000 + 3 * batch_size, num_threads=16, min_after_dequeue=1000)
 
 	return image, label_gender
 
@@ -117,13 +120,6 @@ def reformat(labels, class_num):
 	labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
 	# labels = np.array([[float(i == label) for i in range(label_count)] for label in labels])
 	return labels
-
-
-# def reformat(dataset, labels):
-#     dataset = dataset.reshape(-1, image_size * image_size * img_channels).astype(np.float32)
-#     labels = (np.arange(class_num) == labels[:, None]).astype(np.float32)
-#     return dataset, labels
-
 
 def randomize(dataset, gender, age):
 	permutation = np.random.permutation(age.shape[0])

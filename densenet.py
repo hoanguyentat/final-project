@@ -79,15 +79,6 @@ class DenseNet():
 
             return x
 
-    def transition_layer(self, x, scope):
-        with tf.name_scope(scope):
-            x = batch_normalization(x, training=self.training, scope=scope + '_batch1')
-            x = tf_relu(x)
-            x = conv_layer(x, filter=self.filters, kernel=[1, 1], layer_name=scope + '_conv1')
-            x = tf_dropout(x, rate=dropout_rate, training=self.training)
-            x = tf_average_pooling(x, pool_size=[2, 2], stride=2)
-            return x
-
     def dense_block(self, input_x, nb_layers, layer_name):
         with tf.name_scope(layer_name):
             layers_concat = list()
@@ -105,6 +96,15 @@ class DenseNet():
 
             return x
 
+    def transition_layer(self, x, scope):
+        with tf.name_scope(scope):
+            x = batch_normalization(x, training=self.training, scope=scope + '_batch1')
+            x = tf_relu(x)
+            x = conv_layer(x, filter=self.filters, kernel=[1, 1], layer_name=scope + '_conv1')
+            x = tf_dropout(x, rate=dropout_rate, training=self.training)
+            x = tf_average_pooling(x, pool_size=[2, 2], stride=2)
+            return x
+            
     def Dense_net(self, input_x):
         x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
         x = tf_max_pooling(input_x, pool_size=[3,3], stride=2)
