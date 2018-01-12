@@ -65,8 +65,8 @@ optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nes
 train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
 
 
-correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+# correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
+# accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 tf.add_to_collection('training_flag', training_flag)
 tf.add_to_collection('x', x)
@@ -78,8 +78,8 @@ tf.add_to_collection('cost', cost)
 tf.add_to_collection('optimizer', optimizer)
 tf.add_to_collection('train', train)
 tf.add_to_collection('l2_loss', l2_loss)
-tf.add_to_collection('correct_prediction', correct_prediction)
-tf.add_to_collection('accuracy', accuracy)
+# tf.add_to_collection('correct_prediction', correct_prediction)
+# tf.add_to_collection('accuracy', accuracy)
 
 saver = tf.train.Saver(tf.global_variables())
 parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d" % (growth_k, init_learning_rate, weight_decay, nb_blocks, image_size)
@@ -123,16 +123,16 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             }
 
             _, batch_loss = sess.run([train, cost], feed_dict=train_feed_dict)
-            batch_acc = accuracy.eval(feed_dict=train_feed_dict)
+            # batch_acc = accuracy.eval(feed_dict=train_feed_dict)
 
             train_loss += batch_loss
-            train_acc += batch_acc
+            # train_acc += batch_acc
             pre_index += batch_size
 
             # Buoc step phai so sanh voi iteration - 1
             if step == iteration - 1:
                 train_loss /= iteration  # average loss
-                train_acc /= iteration  # average accuracy
+                # train_acc /= iteration  # average accuracy
 
                 train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
                                                   tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])

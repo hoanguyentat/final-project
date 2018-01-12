@@ -77,7 +77,6 @@ l2_loss = tf.add_n(costs)
 optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True, name="optimizer")
 train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
 
-
 correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -170,4 +169,3 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 with open('logs-gender.txt', 'a') as f:
                     f.write(log_line)
         saver.save(sess=sess, save_path='./model-gender-new/dense.ckpt')
-

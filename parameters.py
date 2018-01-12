@@ -1,7 +1,8 @@
 #Hyperparameter
 growth_k = 24
 data_path = 'data/wiki_crop/wiki_db_96.mat'
-tfrecord_fn = 'tfrecords/train_96.tfrecords'
+tfrecord_train = 'tfrecords/train_96.tfrecords'
+tfrecord_valid = 'tfrecords/valid_96.tfrecords'
 # Number of (dense block + Transition Layer)
 nb_blocks = 3
 init_learning_rate = 0.1
@@ -28,4 +29,5 @@ test_fraction = 0.2
 
 test_batch_size = 100
 total_epochs = 300
+test_epochs  = 1
 	

@@ -21,7 +21,7 @@ def get_args():
 	parser = argparse.ArgumentParser(description="This script cleans-up noisy labels "
 												 "and creates database for training.",
 									 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-	parser.add_argument("--output", "-o", type=str, help="path to output database mat file")
+	parser.add_argument("--output", "-o", type=str, help="path to output database tfrecords file")
 	parser.add_argument("--db", type=str, default="wiki",
 						help="dataset; wiki or imdb")
 	parser.add_argument("--img_size", type=int, default=32,
