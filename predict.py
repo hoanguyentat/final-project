@@ -47,21 +47,6 @@ def predict(folder, file):
     with open("result.json", "w") as file:
         json.dump(dic, file)
     
-
-def evulate():
-    valid = []
-    with open('data/test/img20131.json') as data_file:
-        imgs = data_file.read()
-        print(type(imgs))
-        dic = json.loads(imgs)
-        print(type(dic))
-        for (key, val) in enumerate(dic):
-            if dic[val] == "male":
-                valid.append(1)
-            else:
-                valid.append(0)
-    print(valid)
 if __name__ == '__main__':
     # restore_graph("./model-gender")
-    predict('data/test/hola/', './model-gender')
-    # evulate()
+    predict('data/test/', './model-gender-new')
