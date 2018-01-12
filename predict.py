@@ -5,8 +5,9 @@ import json
 
 image_size = 96
 img_channels = 3
-
 path_full = []
+
+
 def load_images_from_folder(fName):
     images = []
     for image in os.listdir(fName):
@@ -61,6 +62,8 @@ def evulate():
             else:
                 valid.append(0)
     print(valid)
+
+
 if __name__ == '__main__':
     # restore_graph("./model-gender")
     predict('data/test/hola/', './model-gender')
