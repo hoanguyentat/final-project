@@ -15,6 +15,8 @@ def Evaluate(sess):
     cost = tf.get_collection('cost')
     accuracy = tf.get_collection('accuracy')
     epoch_learning_rate = tf.get_collection('epoch_learning_rate')
+    learning_rate = tf.get_collection('learning_rate')
+    training_flag = tf.get_collection('training_flag')
 
     test_acc, test_loss = ([] for i in range(2))
     test_iteration = int(nb_of_test_images / batch_size)
