@@ -1,5 +1,5 @@
 #Hyperparameter
-growth_k = 24
+growth_k = 12
 data_path = 'data/wiki_crop/wiki_db_96.mat'
 tfrecord_train = '/data/adoptimal/hoant/gender-detection/tfrecords/train_96.tfrecords'
 tfrecord_valid = '/data/adoptimal/hoant/gender-detection/tfrecords/valid_96.tfrecords'
@@ -22,7 +22,7 @@ nesterov_momentum = 0.9
 weight_decay = 1e-4
 
 # Label & batch_size
-batch_size = 64
+batch_size = 32
 
 train_fraction = 0.8
 test_fraction = 0.2
