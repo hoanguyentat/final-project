@@ -1,8 +1,8 @@
 import tensorflow as tf
 
 
-tf.app.flags.DEFINE_string('tfrecord_train', 'tfrecords/train_96.tfrecords', 'Training records')
-tf.app.flags.DEFINE_string('tfrecord_valid', 'tfrecords/valid_96.tfrecords', 'Validation records')
+tf.app.flags.DEFINE_string('tfrecord_train', '/data/adoptimal/hoant/gender-detection/tfrecords/train_96.tfrecords', 'Training records')
+tf.app.flags.DEFINE_string('tfrecord_valid', '/data/adoptimal/hoant/gender-detection/tfrecords/valid_96.tfrecords', 'Validation records')
 
 tf.app.flags.DEFINE_integer('batch_size', 128, 'Batch size')
 tf.app.flags.DEFINE_integer('deepth', 40, 'Deepth')
