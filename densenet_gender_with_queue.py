@@ -9,7 +9,7 @@ import time
 
 
 def Evaluate(sess):
-    test_x, test_labels = read_and_decode_tfrecords(tfrecord_valid, test_epochs)
+    test_x, test_labels, _ = read_and_decode_tfrecords(tfrecord_valid, test_epochs)
     test_labels = tf.one_hot(test_labels, class_num_gender)
 
     test_acc, test_loss = ([] for i in range(2))
@@ -34,7 +34,7 @@ def Evaluate(sess):
 
 
 # get data from file
-x, labels = read_and_decode_tfrecords(tfrecord_train, total_epochs)
+x, labels, _ = read_and_decode_tfrecords(tfrecord_train, total_epochs)
 # train_x, test_x = color_preprocessing(train_x, test_x)
 labels = tf.one_hot(labels, class_num_gender)
 
