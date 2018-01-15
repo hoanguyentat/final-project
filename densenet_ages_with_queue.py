@@ -24,7 +24,7 @@ def Evaluate(sess):
         training_flag = tf.get_collection('training_flag')
         test_feed_dict = {
             learning_rate: epoch_learning_rate,
-            training_flag: False
+            training_flag: True
         }
 
         loss_, acc_ = sess.run([cost, accuracy], feed_dict=test_feed_dict)
@@ -128,7 +128,7 @@ def main(_):
                     train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
                                                       tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
                     tf.add_to_collection('train_summary', train_summary)
-                    test_acc, test_loss, test_summary = Evaluate(sess, training_flag)
+                    test_acc, test_loss, test_summary = Evaluate(sess)
 
                     # save for tensorboard
                     summary_writer.add_summary(summary=train_summary, global_step=epoch)
