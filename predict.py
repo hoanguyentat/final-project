@@ -5,8 +5,9 @@ import json
 
 image_size = 96
 img_channels = 3
-
 path_full = []
+
+
 def load_images_from_folder(fName):
     images = []
     for image in os.listdir(fName):
@@ -46,7 +47,8 @@ def predict(folder, file):
         dic = json.dumps(dic, sort_keys=True)
     with open("result.json", "w") as file:
         json.dump(dic, file)
-    
+
+
 if __name__ == '__main__':
     # restore_graph("./model-gender")
     predict('data/test/', './model-gender-new')
