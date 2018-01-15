@@ -1,8 +1,8 @@
 #Hyperparameter
 growth_k = 24
 data_path = 'data/wiki_crop/wiki_db_96.mat'
-tfrecord_train = 'tfrecords/train_96.tfrecords'
-tfrecord_valid = 'tfrecords/valid_96.tfrecords'
+tfrecord_train = '/data/adoptimal/hoant/gender-detection/tfrecords/train_96.tfrecords'
+tfrecord_valid = '/data/adoptimal/hoant/gender-detection/tfrecords/valid_96.tfrecords'
 # Number of (dense block + Transition Layer)
 nb_blocks = 3
 init_learning_rate = 0.1
