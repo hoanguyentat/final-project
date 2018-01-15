@@ -128,7 +128,7 @@ def main(_):
                     train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
                                                       tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
                     tf.add_to_collection('train_summary', train_summary)
-                    test_acc, test_loss, test_summary = Evaluate(sess)
+                    test_acc, test_loss, test_summary = Evaluate(sess, training_flag)
 
                     # save for tensorboard
                     summary_writer.add_summary(summary=train_summary, global_step=epoch)
