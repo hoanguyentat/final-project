@@ -16,8 +16,8 @@ def Evaluate(sess):
     accuracy = tf.get_collection('accuracy')
     epoch_learning_rate = tf.get_collection('epoch_learning_rate')
     learning_rate = tf.get_collection('learning_rate')
-    # training_flag = tf.
-    training_flag = tf.get_collection('training_flag')
+    # training_flag = tf.placeholder(tf.bool)
+    training_flag = tf.cast(tf.get_collection('training_flag'), tf.bool)
 
     test_feed_dict = {
         learning_rate: epoch_learning_rate,
