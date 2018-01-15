@@ -16,17 +16,17 @@ def Evaluate(sess):
     accuracy = tf.get_collection('accuracy')
     epoch_learning_rate = tf.get_collection('epoch_learning_rate')
     learning_rate = tf.get_collection('learning_rate')
+    training_flag = tf.get_collection('training_flag')
+
+    test_feed_dict = {
+        learning_rate: epoch_learning_rate,
+        training_flag: False
+    }
 
     test_acc, test_loss = ([] for i in range(2))
     test_iteration = int(nb_of_test_images / batch_size)
 
     for it in range(test_iteration):
-        training_flag = tf.get_collection('training_flag')
-        test_feed_dict = {
-            learning_rate: epoch_learning_rate,
-            training_flag: True
-        }
-
         loss_, acc_ = sess.run([cost, accuracy], feed_dict=test_feed_dict)
         test_acc.append(acc_)
         test_loss.append(loss_)
