@@ -9,7 +9,7 @@ import time
 
 
 def Evaluate(sess):
-    # read and decode tfrecords return images, labels_ages, labels_ages
+    # read and decode tfrecords return images, labels_age, labels_ages
     test_x, _, test_labels = read_and_decode_tfrecords(tfrecord_valid, test_epochs)
     test_labels = tf.one_hot(test_labels, class_num_age)
 
@@ -73,7 +73,7 @@ tf.add_to_collection('cost', cost)
 tf.add_to_collection('optimizer', optimizer)
 tf.add_to_collection('train', train)
 tf.add_to_collection('l2_loss', l2_loss)
-tf.add_to_collection('correct_prediction', correct_prediction)
+tf.add_to_collection('loss_prediction', loss_prediction)
 tf.add_to_collection('accuracy', accuracy)
 
 saver = tf.train.Saver(tf.global_variables())
@@ -82,13 +82,13 @@ saver = tf.train.Saver(tf.global_variables())
 max_acc = 0
 parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d \n" % (
     growth_k, init_learning_rate, batch_size, weight_decay, nb_blocks, image_size)
-with open('logs-ages.txt', 'a') as f:
+with open('logs-age.txt', 'a') as f:
     f.write(parameter_log)
 
 
 print("Modeling done, starting training...")
 with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
-    ckpt = tf.train.get_checkpoint_state('./model-ages')
+    ckpt = tf.train.get_checkpoint_state('./model-age')
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         saver.restore(sess, ckpt.model_checkpoint_path)
     else:
@@ -99,7 +99,7 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
     epoch_learning_rate = init_learning_rate
     steps_per_epoch = int(nb_of_train_images / batch_size)
-    summary_writer = tf.summary.FileWriter('./logs-ages', sess.graph)
+    summary_writer = tf.summary.FileWriter('./logs-age', sess.graph)
     train_acc, train_loss, test_acc, test_loss = ([] for i in range(4))
 
     start_time = time.time()
@@ -135,10 +135,10 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 summary_writer.add_summary(summary=test_summary, global_step=epoch)
 
                 # save checkpoint
-                saver.save(sess=sess, save_path='./model-ages/dense.ckpt')
+                saver.save(sess=sess, save_path='./model-age/dense.ckpt')
                 if train_acc >= max_acc:
                     max_acc = train_acc
-                    saver.save(sess=sess, save_path='./model-ages/max/dense.ckpt')
+                    saver.save(sess=sess, save_path='./model-age/max/dense.ckpt')
 
                     # log_line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, time: %ss \n" % (epoch, total_epochs,
                 # train_loss, train_acc, str(dur_time))
@@ -146,7 +146,7 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                            "time: %ss \n" % (
                                epoch, total_epochs, train_loss, train_acc, test_loss, test_acc, str(dur_time))
                 print(log_line)
-                with open('logs-ages.txt', 'a') as f:
+                with open('logs-age.txt', 'a') as f:
                     f.write(log_line)
 
                 # reset for new epoch
