@@ -8,7 +8,7 @@ from densenet import *
 import time
 
 
-def Evaluate(sess):
+def Evaluate(sess, training_flag):
     # read and decode tfrecords return images, labels_age, labels_ages
     test_x, _, test_labels = read_and_decode_tfrecords(FLAGS.tfrecord_valid, test_epochs)
     test_labels = tf.one_hot(test_labels, class_num_age)
@@ -17,7 +17,8 @@ def Evaluate(sess):
     epoch_learning_rate = tf.get_collection('epoch_learning_rate')
     learning_rate = tf.get_collection('learning_rate')
     training_flag = tf.placeholder(tf.bool)
-
+    print(type(training_flag))
+    
     test_acc, test_loss = ([] for i in range(2))
     test_iteration = int(nb_of_test_images / batch_size)
 
@@ -128,7 +129,7 @@ def main(_):
                     train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
                                                       tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
                     tf.add_to_collection('train_summary', train_summary)
-                    test_acc, test_loss, test_summary = Evaluate(sess)
+                    test_acc, test_loss, test_summary = Evaluate(sess, training_flag)
 
                     # save for tensorboard
                     summary_writer.add_summary(summary=train_summary, global_step=epoch)
