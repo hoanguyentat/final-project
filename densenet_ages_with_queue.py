@@ -16,7 +16,8 @@ def Evaluate(sess):
     accuracy = tf.get_collection('accuracy')
     epoch_learning_rate = tf.get_collection('epoch_learning_rate')
     learning_rate = tf.get_collection('learning_rate')
-    # training_flag = tf.get_collection('training_flag')
+    # training_flag = tf.
+    training_flag = tf.get_collection('training_flag')
 
     test_feed_dict = {
         learning_rate: epoch_learning_rate,
@@ -46,7 +47,8 @@ def main(_):
     # train_x, test_x = color_preprocessing(train_x, test_x)
 
     print("Modeling....")
-    training_flag = tf.placeholder(tf.bool)
+    training_flag = tf.placeholder(tf.bool, name='training_flag')
+    print(type(training_flag))
     learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
     logits = DenseNet(x=x, nb_blocks=nb_blocks, filters=growth_k, training=training_flag).model
