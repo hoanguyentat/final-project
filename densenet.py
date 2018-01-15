@@ -56,7 +56,7 @@ def concatenation(layers):
 
 
 def Linear(x):
-    return tf.layers.dense(inputs=x, units=class_num_gender, name='linear')
+    return tf.layers.dense(inputs=x, units=class_num_age, name='linear')
 
 class DenseNet():
     def __init__(self, x, nb_blocks, filters, training):
