@@ -37,6 +37,7 @@ def Evaluate(sess, test_x, test_y):
 
     return test_acc, test_loss, summary
 
+
 # get data from file
 train_image, labels_gender, labels_age, _, _, _ = load_data(data_path)
 labels_gender = reformat(labels_gender, class_num_gender)
@@ -60,7 +61,6 @@ label = tf.placeholder(tf.float32, shape=[None, class_num_gender])
 training_flag = tf.placeholder(tf.bool)
 learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
-
 logits = DenseNet(x=x, nb_blocks=nb_blocks, filters=growth_k, training=training_flag).model
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=label, logits=logits), name="cost")
 
@@ -74,7 +74,8 @@ l2_loss = tf.add_n(costs)
 
 # regular_loss = cost + l2_loss * weight_decay
 
-optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True, name="optimizer")
+optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate, momentum=nesterov_momentum, use_nesterov=True,
+                                       name="optimizer")
 train = optimizer.minimize(cost + l2_loss * weight_decay, name='train')
 
 correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(label, 1))
@@ -96,25 +97,26 @@ tf.add_to_collection('accuracy', accuracy)
 saver = tf.train.Saver(tf.global_variables())
 
 # Start train
-parameter_log = "growth_k = %d, init_learning_rate = %f, batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d \n" % (growth_k, init_learning_rate, batch_size, weight_decay, nb_blocks, image_size)
+parameter_log = "growth_k = %d, init_learning_rate = %f,\
+                batch_size = %d, weight_decay = %f, number_of_block = %d, image_size = %d \n" \
+                % (growth_k, init_learning_rate, batch_size, weight_decay, nb_blocks, image_size)
 with open('logs-gender.txt', 'a') as f:
     f.write(parameter_log)
 print("Modeling done, starting training...")
 with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
-
     ckpt = tf.train.get_checkpoint_state('./model-gender-new')
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
         saver.restore(sess, ckpt.model_checkpoint_path)
     else:
         sess.run(tf.global_variables_initializer())
 
-
     epoch_learning_rate = init_learning_rate
 
     summary_writer = tf.summary.FileWriter('./logs-gender-new', sess.graph)
 
     for epoch in range(1, total_epochs + 1):
-        if epoch == (total_epochs * 0.2) or epoch == (total_epochs * 0.4) or epoch == (total_epochs * 0.6) or epoch == (total_epochs * 0.8):
+        if epoch == (total_epochs * 0.2) or epoch == (total_epochs * 0.4) or epoch == (total_epochs * 0.6) or epoch == (
+            total_epochs * 0.8):
             epoch_learning_rate = epoch_learning_rate / 10
 
         pre_index = 0
@@ -163,7 +165,8 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
                 summary_writer.add_summary(summary=test_summary, global_step=epoch)
                 # summary_writer.flush()
 
-                log_line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, test_acc: %.4f, time: %ss \n" % (
+                log_line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, \
+                 test_acc: %.4f, time: %ss \n" % (
                     epoch, total_epochs, train_loss, train_acc, test_loss, test_acc, str(dur_time))
                 print(log_line)
                 with open('logs-gender.txt', 'a') as f:
