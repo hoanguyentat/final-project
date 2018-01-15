@@ -113,10 +113,10 @@ def read_and_decode_tfrecords(fn, num_epochs=None):
     images_flip = tf.image.random_flip_left_right(images_crop)
 
     print("batch_size: " + str(batch_size))
-    image, label_gender = tf.train.shuffle_batch([images_flip, labels_gender], batch_size=batch_size,
+    image, label_gender, labels_age = tf.train.shuffle_batch([images_flip, labels_gender, labels_age], batch_size=batch_size,
                                                  capacity=1000 + 3 * batch_size, num_threads=16, min_after_dequeue=1000)
 
-    return image, label_gender
+    return image, label_gender, labels_age
 
 
 def reformat(labels, class_num):
