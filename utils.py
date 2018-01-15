@@ -111,6 +111,7 @@ def read_and_decode_tfrecords(fn, num_epochs=None):
 
     images_crop = tf.random_crop(images, [image_size, image_size, img_channels])
     images_flip = tf.image.random_flip_left_right(images_crop)
+    # images_flip = tf.image.rgb_to_grayscale(images_flip)
 
     print("batch_size: " + str(batch_size))
     image, label_gender, labels_age = tf.train.shuffle_batch([images_flip, labels_gender, labels_age], batch_size=batch_size,

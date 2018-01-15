@@ -6,7 +6,7 @@ from utils import *
 from parameters import *
 
 
-depth = 40
+
 
 def conv_layer(input, filter, kernel, stride=1, layer_name="conv"):
     with tf.name_scope(layer_name):
@@ -109,7 +109,7 @@ class DenseNet():
         x = conv_layer(input_x, filter=2 * self.filters, kernel=[7, 7], stride=2, layer_name='conv0')
         x = tf_max_pooling(input_x, pool_size=[3,3], stride=2)
 
-        layers_per_block = (depth - (self.nb_blocks + 1)) // self.nb_blocks
+        layers_per_block = (deepth - (self.nb_blocks + 1)) // self.nb_blocks
 
         for i in range(self.nb_blocks) :
             # 6 -> 12 -> 48
