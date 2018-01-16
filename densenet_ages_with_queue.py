@@ -23,20 +23,20 @@ def Evaluate(sess):
         training_flag: False
     }
 
-    test_acc, test_loss = ([] for i in range(2))
+    test_error, test_loss = ([] for i in range(2))
     test_iteration = int(nb_of_test_images / batch_size)
 
     for it in range(test_iteration):
         loss_, acc_ = sess.run([cost, accuracy], feed_dict=test_feed_dict)
-        test_acc.append(acc_)
+        test_error.append(acc_)
         test_loss.append(loss_)
 
-    test_acc = np.average(test_acc)
+    test_error = np.average(test_error)
     test_loss = np.average(test_loss)
     summary = tf.Summary(value=[tf.Summary.Value(tag='test_loss', simple_value=test_loss),
-                                tf.Summary.Value(tag='test_accuracy', simple_value=test_acc)])
+                                tf.Summary.Value(tag='test_error', simple_value=test_error)])
 
-    return test_acc, test_loss, summary
+    return test_error, test_loss, summary
 
 
 def main(_):
@@ -100,7 +100,7 @@ def main(_):
         epoch_learning_rate = init_learning_rate
         steps_per_epoch = int(nb_of_train_images / batch_size)
         summary_writer = tf.summary.FileWriter('./logs-age', sess.graph)
-        train_acc, train_loss, test_acc, test_loss = ([] for i in range(4))
+        train_error, train_loss, test_error, test_loss = ([] for i in range(4))
 
         start_time = time.time()
         try:
@@ -117,18 +117,18 @@ def main(_):
                 _, _loss = sess.run([train, cost], feed_dict=train_feed_dict)
                 _acc = accuracy.eval(feed_dict=train_feed_dict)
 
-                train_acc.append(_acc)
+                train_error.append(_acc)
                 train_loss.append(_loss)
 
                 if step % steps_per_epoch == 0:
                     dur_time = time.time() - start_time
                     train_loss = np.average(train_loss)
-                    train_acc = np.average(train_acc)
+                    train_error = np.average(train_error)
 
                     train_summary = tf.Summary(value=[tf.Summary.Value(tag='train_loss', simple_value=train_loss),
-                                                      tf.Summary.Value(tag='train_accuracy', simple_value=train_acc)])
+                                                      tf.Summary.Value(tag='train_erroruracy', simple_value=train_error)])
                     tf.add_to_collection('train_summary', train_summary)
-                    test_acc, test_loss, test_summary = Evaluate(sess)
+                    test_error, test_loss, test_summary = Evaluate(sess)
 
                     # save for tensorboard
                     summary_writer.add_summary(summary=train_summary, global_step=epoch)
@@ -136,20 +136,20 @@ def main(_):
 
                     # save checkpoint
                     saver.save(sess=sess, save_path='./model-age/dense.ckpt')
-                    if train_acc >= max_acc:
-                        max_acc = train_acc
+                    if train_error >= max_acc:
+                        max_acc = train_error
                         saver.save(sess=sess, save_path='./model-age/max/dense.ckpt')
 
-                    log_line = "epoch: %d/%d, train_loss: %.4f, train_acc: %.4f, test_loss: %.4f, test_acc: %.4f, " \
+                    log_line = "epoch: %d/%d, train_loss: %.4f, train_error: %.4f, test_loss: %.4f, test_error: %.4f, " \
                                "time: %ss \n" % (
-                                   epoch, total_epochs, train_loss, train_acc, test_loss, test_acc, str(dur_time))
+                                   epoch, total_epochs, train_loss, train_error, test_loss, test_error, str(dur_time))
                     print(log_line)
                     with open('logs-age.txt', 'a') as f:
                         f.write(log_line)
 
                     # reset for new epoch
                     start_time = time.time()
-                    train_acc, train_loss, test_acc, test_loss = ([] for i in range(4))
+                    train_error, train_loss, test_error, test_loss = ([] for i in range(4))
                     epoch += 1
                 step += 1
         except tf.errors.OutOfRangeError as e:
