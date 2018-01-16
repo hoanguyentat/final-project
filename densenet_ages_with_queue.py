@@ -12,13 +12,12 @@ def Evaluate(sess):
     # read and decode tfrecords return images, labels_age, labels_ages
     test_x, _, test_labels = read_and_decode_tfrecords(FLAGS.tfrecord_valid, test_epochs)
     test_labels = tf.one_hot(test_labels, class_num_age)
-    cost = tf.get_collection('cost')
-    accuracy = tf.get_collection('accuracy')
-    epoch_learning_rate = tf.get_collection('epoch_learning_rate')
-    learning_rate = tf.get_collection('learning_rate')
-    # training_flag = tf.placeholder(tf.bool)
-    training_flag = tf.cast(tf.get_collection('training_flag'), tf.bool)
-
+    cost = tf.get_collection('cost')[0]
+    accuracy = tf.get_collection('accuracy')[0]
+    epoch_learning_rate = tf.get_collection('epoch_learning_rate')[0]
+    learning_rate = tf.get_collection('learning_rate')[0]
+    training_flag = tf.get_collection('training_flag')[0]
+    
     test_feed_dict = {
         learning_rate: epoch_learning_rate,
         training_flag: False
@@ -48,7 +47,6 @@ def main(_):
 
     print("Modeling....")
     training_flag = tf.placeholder(tf.bool, name='training_flag')
-    print(type(training_flag))
     learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
     logits = DenseNet(x=x, nb_blocks=nb_blocks, filters=growth_k, training=training_flag).model
