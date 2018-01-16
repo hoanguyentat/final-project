@@ -9,15 +9,15 @@ import time
 
 
 def Evaluate(sess):
+    global epoch_learning_rate
     # read and decode tfrecords return images, labels_age, labels_ages
     test_x, _, test_labels = read_and_decode_tfrecords(FLAGS.tfrecord_valid, test_epochs)
     test_labels = tf.one_hot(test_labels, class_num_age)
     cost = tf.get_collection('cost')[0]
     accuracy = tf.get_collection('accuracy')[0]
-    epoch_learning_rate = tf.get_collection('epoch_learning_rate')[0]
     learning_rate = tf.get_collection('learning_rate')[0]
     training_flag = tf.get_collection('training_flag')[0]
-    
+
     test_feed_dict = {
         learning_rate: epoch_learning_rate,
         training_flag: False
@@ -40,6 +40,7 @@ def Evaluate(sess):
 
 
 def main(_):
+    global epoch_learning_rate
     # get data from file
     x, _, labels = read_and_decode_tfrecords(FLAGS.tfrecord_train, total_epochs)
     labels = tf.one_hot(labels, class_num_age)
@@ -109,7 +110,6 @@ def main(_):
                 if epoch == (total_epochs * 0.2) or epoch == (total_epochs * 0.4) or epoch == (
                             total_epochs * 0.6) or epoch == (total_epochs * 0.8):
                     epoch_learning_rate = epoch_learning_rate / 10
-                    tf.add_to_collection('learning_rate', epoch_learning_rate)
                 train_feed_dict = {
                     learning_rate: epoch_learning_rate,
                     training_flag: True
