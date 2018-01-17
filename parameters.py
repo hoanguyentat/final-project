@@ -42,4 +42,4 @@ test_fraction = 0.2
 test_batch_size = 100
 total_epochs = 300
 test_epochs  = 1
-deepth = 40
+deepth = 100
